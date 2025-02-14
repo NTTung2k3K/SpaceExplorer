@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject scoreUITextGO;// khoi tao diem
     public GameObject TimeCounterGO; // khoi tao thoi gian
     public GameObject GameTitleGO; // khoi tao title
+    public GameObject asteroidGeneratorGO;
     public enum GameManagerState
     {
         Opening,
@@ -36,6 +37,9 @@ public class GameManager : MonoBehaviour
                 //An di game over
                 GameOverGO.SetActive(false);
 
+                // an di thien thach 
+                asteroidGeneratorGO.SetActive(false);
+
                 // hien thi title game
                 GameTitleGO.SetActive(true);
 
@@ -44,15 +48,21 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameManagerState.GamePlay:
-
                 //dat lai diem 
                 scoreUITextGO.GetComponent<GameScore>().Score = 0;
-                
+
                 // an di nut play khi vao game
                 playButton.SetActive(false);
 
                 //an di title game
                 GameTitleGO.SetActive(false);
+
+                // hien thi thien thach
+                asteroidGeneratorGO.SetActive(true);
+
+                // Cho phép spawn thiên thạch
+                asteroidGeneratorGO.GetComponent<AsteroidGenerator>().canSpawn = true;
+                asteroidGeneratorGO.GetComponent<AsteroidGenerator>().StartSpawning();
 
                 //hien thi nguoi choi va tao so mang
                 playerShip.GetComponent<PlayerController>().Init();
@@ -62,8 +72,8 @@ public class GameManager : MonoBehaviour
 
                 //bat dau dem gio
                 TimeCounterGO.GetComponent<TimeCounter>().StartTimeCounter();
-
                 break;
+
             case GameManagerState.GameOver:
 
                 //dung dem gio

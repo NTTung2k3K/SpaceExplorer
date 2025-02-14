@@ -15,41 +15,36 @@ public class AsteroidGenerator : MonoBehaviour
         new Color(1f, 0f, 0f),     // red
     };
 
-    public float waveDelay = 1f; // Thời gian chờ giữa các đợt
+    public float waveDelay = 1f;
+    private bool isSpawningWave = false;
 
-    private bool isSpawningWave = false; // Cờ kiểm tra đang tạo đợt mới hay chưa
+    // Thêm biến canSpawn để kiểm soát việc spawn
+    public bool canSpawn = false;
 
-    void Start()
+    // Bỏ hàm Start()
+
+    public void StartSpawning()
     {
-        // Tạo đợt đầu tiên khi bắt đầu game
         StartCoroutine(SpawnWaveRoutine());
     }
 
-    // Coroutine tạo 1 đợt thiên thạch
     IEnumerator SpawnWaveRoutine()
     {
         isSpawningWave = true;
-
-        // Chờ trước khi tạo đợt mới (có thể bỏ nếu không cần)
         yield return new WaitForSeconds(waveDelay);
 
-        // Lấy vị trí của màn hình
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)); // dưới trái
-        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1)); // trên phải
+        // Lấy vị trí màn hình
+        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
 
-        // Mỗi thiên thạch được spawn từ phía trên (y = max.y) với vị trí x ngẫu nhiên
         for (int i = 0; i < MaxAsteroids; i++)
         {
             Vector2 spawnPosition = new Vector2(Random.Range(min.x, max.x), max.y);
             GameObject asteroid = Instantiate(AsteroidGO, spawnPosition, Quaternion.identity);
 
-            // Gán màu ngẫu nhiên cho thiên thạch
             asteroid.GetComponent<SpriteRenderer>().color = asteroidColors[Random.Range(0, asteroidColors.Length)];
-
-            // Gán tốc độ ngẫu nhiên (âm để di chuyển xuống dưới)
             asteroid.GetComponent<Asteroid>().speed = -(1f * Random.value + 0.5f);
 
-            // Gán thiên thạch vừa tạo thành con của đối tượng generator (để dễ quản lý)
             asteroid.transform.parent = transform;
         }
 
@@ -58,11 +53,11 @@ public class AsteroidGenerator : MonoBehaviour
 
     void Update()
     {
-        // Kiểm tra nếu tất cả các thiên thạch của đợt hiện tại đã bị bắn hạ (không còn con nào)
-        // và không đang trong quá trình tạo đợt mới
+        if (!canSpawn)
+            return;
+
         if (transform.childCount == 0 && !isSpawningWave)
         {
-            // Tạo đợt mới
             StartCoroutine(SpawnWaveRoutine());
         }
     }

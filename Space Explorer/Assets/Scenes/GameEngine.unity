@@ -260,11 +260,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7242816376539122272, guid: d2d19ece600647442a4dc3f79bb51f58, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.94
+      value: 6.28
       objectReference: {fileID: 0}
     - target: {fileID: 7242816376539122272, guid: d2d19ece600647442a4dc3f79bb51f58, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.55
+      value: 6.28
       objectReference: {fileID: 0}
     - target: {fileID: 7242816376539122272, guid: d2d19ece600647442a4dc3f79bb51f58, type: 3}
       propertyPath: m_LocalPosition.z
@@ -499,6 +499,7 @@ MonoBehaviour:
   scoreUITextGO: {fileID: 1378364519}
   TimeCounterGO: {fileID: 452991498}
   GameTitleGO: {fileID: 966712780}
+  asteroidGeneratorGO: {fileID: 1989553919}
 --- !u!4 &287264043
 Transform:
   m_ObjectHideFlags: 0
@@ -595,8 +596,8 @@ Transform:
   m_GameObject: {fileID: 312817783}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0002002716, y: 0.00323, z: 10}
-  m_LocalScale: {x: 0.6869465, y: 0.3120424, z: 1}
+  m_LocalPosition: {x: 0.0005, y: 0.00323, z: 10}
+  m_LocalScale: {x: 0.76959556, y: 0.3120424, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 519420032}
@@ -1806,11 +1807,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7242816376539122272, guid: d2d19ece600647442a4dc3f79bb51f58, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.64
+      value: 8.42
       objectReference: {fileID: 0}
     - target: {fileID: 7242816376539122272, guid: d2d19ece600647442a4dc3f79bb51f58, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.11
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: 7242816376539122272, guid: d2d19ece600647442a4dc3f79bb51f58, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2441,8 +2442,8 @@ Transform:
   m_GameObject: {fileID: 1922569328}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00068187714, y: 0.000682, z: 10}
-  m_LocalScale: {x: 0.6869925, y: 0.31256664, z: 1}
+  m_LocalPosition: {x: -0.0024, y: 0.000682, z: 10}
+  m_LocalScale: {x: 0.76946545, y: 0.31256664, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 519420032}
@@ -2603,7 +2604,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AsteroidGO: {fileID: 7931937910412794005, guid: a8b5f9acc281e9744a015c4b2f2c13df, type: 3}
   MaxAsteroids: 3
-  waveDelay: 1
+  waveDelay: 3
+  canSpawn: 0
 --- !u!4 &1989553921
 Transform:
   m_ObjectHideFlags: 0
