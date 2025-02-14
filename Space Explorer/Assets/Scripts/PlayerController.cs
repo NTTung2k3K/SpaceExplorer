@@ -128,6 +128,8 @@ public class PlayerController : MonoBehaviour
             }
             Destroy(col.gameObject);  // Hủy ngôi sao
         }
+
+        
     }
 
     void PlayExplosion()
