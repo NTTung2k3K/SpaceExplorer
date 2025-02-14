@@ -17,16 +17,15 @@ public class BigStar : MonoBehaviour
         // Lấy vị trí hiện tại
         Vector2 position = transform.position;
 
-        // NGoi sao tu tren xuong( - o day la di chuyen xuong)
+        // Ngôi sao rơi từ trên xuống
         position = new Vector2(position.x, position.y - speed * Time.deltaTime);
 
-        // Cap nhat vi tri
+        // Cập nhật vị trí
         transform.position = position;
 
-        // Lay vi tri duoi trai man hinh 
+        // Kiểm tra nếu ngôi sao ra khỏi màn hình
         Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
 
-        // Ngoi sao ra khoi man hinh thi huy 
         if (transform.position.y < min.y)
         {
             Destroy(gameObject);
@@ -36,14 +35,16 @@ public class BigStar : MonoBehaviour
     // Xử lý va chạm
     void OnTriggerEnter2D(Collider2D col)
     {
-        // Nguoi choi cham vao ngoi sao
+        // Nếu người chơi ăn ngôi sao
         if (col.tag == "PlayerShipTag")
         {
-            // Cong 500 ddiem
+            // Tăng điểm
             scoreUITextGO.GetComponent<GameScore>().Score += 500;
 
-            // Huy ngoi sao
-            Destroy(gameObject);
+            // Gửi tín hiệu cho player tăng tia đạn
+            // Điều này đã được xử lý trong PlayerController, không cần làm gì thêm ở đây
+
+            Destroy(gameObject);  // Hủy ngôi sao
         }
     }
 }

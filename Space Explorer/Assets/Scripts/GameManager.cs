@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
     {
         GMState = GameManagerState.GamePlay;
         UpdateGameManagerState();
+        playerShip.GetComponent<PlayerController>().currentBullets = 1;
     }
 
     // ham thay doi giao dien tro choi sang opening

@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public GameObject PlayerBulletGO;   // Prefab đạn của người chơi
     public GameObject bulletPosition01; // Vị trí bắn đạn thứ nhất
     public GameObject bulletPosition02; // Vị trí bắn đạn thứ hai
+    public GameObject bulletPosition03; // Vị trí bắn đạn thứ ba, vị trí này sẽ được thêm khi có 3 tia
     public GameObject ExplosionGO;      // Prefab vụ nổ
 
     // Tham chiếu đến UI hiển thị số mạng của người chơi
@@ -17,6 +18,9 @@ public class PlayerController : MonoBehaviour
     int lives;
 
     public float speed;
+
+    // Biến lưu trữ số lượng tia đạn hiện tại
+    public int currentBullets = 1;
 
     // Thành phần AudioSource được dùng để phát âm thanh
     private AudioSource audioSource;
@@ -40,7 +44,6 @@ public class PlayerController : MonoBehaviour
             // Nếu chưa có, thêm AudioSource vào GameObject
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        // Lưu ý: Gán file âm thanh (wav/mp3) vào AudioSource trong Inspector.
     }
 
     void Update()
@@ -48,17 +51,28 @@ public class PlayerController : MonoBehaviour
         // Kiểm tra phím space để bắn đạn
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // Phát âm thanh bắn súng (sử dụng clip đã gán sẵn vào AudioSource)
+            // Phát âm thanh bắn súng
             audioSource.Play();
 
-            // Tạo đạn từ prefab và thiết lập vị trí ban đầu
-            GameObject bullet01 = Instantiate(PlayerBulletGO);
-            bullet01.transform.position = bulletPosition01.transform.position;
+            // Bắn đạn dựa trên số lượng tia đạn hiện tại
+            if (currentBullets == 1)
+            {
+                Instantiate(PlayerBulletGO, bulletPosition03.transform.position, Quaternion.identity);
+            }
 
-            GameObject bullet02 = Instantiate(PlayerBulletGO);
-            bullet02.transform.position = bulletPosition02.transform.position;
+            if (currentBullets == 2)
+            {
+                Instantiate(PlayerBulletGO, bulletPosition02.transform.position, Quaternion.identity);
+                Instantiate(PlayerBulletGO, bulletPosition01.transform.position, Quaternion.identity);
+            }
+
+            if (currentBullets >= 3)
+            {
+                Instantiate(PlayerBulletGO, bulletPosition03.transform.position, Quaternion.identity);
+                Instantiate(PlayerBulletGO, bulletPosition02.transform.position, Quaternion.Euler(0, 0, -30));  // Xéo qua trái
+                Instantiate(PlayerBulletGO, bulletPosition01.transform.position, Quaternion.Euler(0, 0, 30));   // Xéo qua phải
+            }
         }
-
         // Xử lý di chuyển của người chơi
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
@@ -101,6 +115,18 @@ public class PlayerController : MonoBehaviour
                     .SetGameManagerState(GameManager.GameManagerState.GameOver);
                 gameObject.SetActive(false);
             }
+        }
+
+        // Kiểm tra va chạm với ngôi sao lớn
+        if (col.CompareTag("BigStarTag"))
+        {
+
+            // Khi ăn ngôi sao, tăng số tia đạn lên
+            if (currentBullets < 3)
+            {
+                currentBullets++;
+            }
+            Destroy(col.gameObject);  // Hủy ngôi sao
         }
     }
 
