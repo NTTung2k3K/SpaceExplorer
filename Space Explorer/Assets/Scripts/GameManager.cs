@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     // dat cac object
     public GameObject playButton;
+    public GameObject quitButton;
     public GameObject playerShip;
     public GameObject enemySpawner;// khoi tao enemy
     public GameObject GameOverGO; // tao hinh gover img
@@ -46,6 +47,9 @@ public class GameManager : MonoBehaviour
                 //Hien thi nut play (active)
                 playButton.SetActive(true);
 
+                //Hien thi nut quit (active)
+                quitButton.SetActive(true);
+
                 break;
             case GameManagerState.GamePlay:
                 //dat lai diem 
@@ -53,6 +57,9 @@ public class GameManager : MonoBehaviour
 
                 // an di nut play khi vao game
                 playButton.SetActive(false);
+
+                //an di nut quit khi vao game
+                quitButton.SetActive(false);
 
                 //an di title game
                 GameTitleGO.SetActive(false);
@@ -85,6 +92,9 @@ public class GameManager : MonoBehaviour
                 //hien thi game over
                 GameOverGO.SetActive(true);
 
+                //hien nut quit khi game over
+                quitButton.SetActive(true);
+
                 //thay doi trang thai ve Opening sau 8 giay
                 Invoke("ChangeToOpeningState", 8f);
                 
@@ -112,5 +122,14 @@ public class GameManager : MonoBehaviour
     public void ChangeToOpeningState()
     {
         SetGameManagerState(GameManagerState.Opening);
+    }
+
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
