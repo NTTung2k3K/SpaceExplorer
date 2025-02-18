@@ -13,10 +13,7 @@ public class EnemyGun : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 
     // ham de ban dan cua enemy
     void FireEnemyBullet()

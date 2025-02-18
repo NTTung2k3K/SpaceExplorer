@@ -22,10 +22,7 @@ public class PlanetController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     //ham dequeue hanh tinh va dat gia tri isMoving cho true
     // vi the hanh tinh co the scroll down man hinh

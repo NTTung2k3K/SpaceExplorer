@@ -14,11 +14,6 @@ public class EnemyBulletController : MonoBehaviour
 
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
     // ham dat gia tri huong di cua dan
     public void SetDirection(Vector2 direction)
