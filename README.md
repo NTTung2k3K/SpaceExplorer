@@ -45,7 +45,7 @@ Space Shooter: Lonely Star is a 2D game developed in Unity (version 6000.0.32f1)
   - 🔄 Return to the main menu.
   - ❌ Quit the game.
 
-## 4. Team Members
+## 4. Team Members of FPT University
 
 | 👤 Name             | 🆔 Student ID |
 | ------------------- | ------------- |
@@ -67,23 +67,5 @@ Space Shooter: Lonely Star is a 2D game developed in Unity (version 6000.0.32f1)
 2. 🔗 Clone or download the game source code.
 3. 📂 Open Unity, select "Open Project," and navigate to the source code folder.
 4. ▶️ Run the game in Unity Editor or build an executable file.
-
-## 7. Grading Criteria
-
-### 🕹️ Gameplay (50 points):
-
-- ✅ Smooth controls.
-- 🔫 Shooting and upgrade mechanics function properly.
-- 🎯 Enemy spawns and difficulty scaling are well-balanced.
-
-### 🎨 Design & Graphics (20 points):
-
-- 🛰️ Movement, shooting, and collision effects.
-- 📺 Simple yet user-friendly interface.
-
-### 📜 Documentation & Code (30 points):
-
-- 📝 Clearly commented code.
-- 📚 Comprehensive instructions for setup and gameplay.
 
 Enjoy the game! 🚀
