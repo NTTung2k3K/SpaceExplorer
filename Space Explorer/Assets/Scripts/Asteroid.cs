@@ -29,10 +29,10 @@ public class Asteroid : MonoBehaviour
         Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         if (transform.position.y < min.y)
         {
-            // Nếu thiên thạch trôi ra mà không bị bắn, trừ 2000 điểm
+            // Nếu thiên thạch trôi ra mà không bị bắn, trừ 500 điểm
             if (scoreUITextGO != null)
             {
-                scoreUITextGO.GetComponent<GameScore>().Score -= 2000;
+                scoreUITextGO.GetComponent<GameScore>().Score -= 500;
             }
             Destroy(gameObject);
         }

@@ -1,150 +1,118 @@
-﻿using System.Security.Cryptography;
-using UnityEditor.Rendering.LookDev;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    // dat cac object
+    // Các đối tượng UI và game
     public GameObject playButton;
     public GameObject quitButton;
     public GameObject playerShip;
-    public GameObject enemySpawner;// khoi tao enemy
-    public GameObject GameOverGO; // tao hinh gover img
-    public GameObject scoreUITextGO;// khoi tao diem
-    public GameObject TimeCounterGO; // khoi tao thoi gian
-    public GameObject GameTitleGO; // khoi tao title
+    public GameObject enemySpawner;
+    public GameObject GameOverGO;
+    public GameObject scoreUITextGO;
+    public GameObject TimeCounterGO;
+    public GameObject GameTitleGO;
     public GameObject asteroidGeneratorGO;
-    public GameObject guidePanel; // Bảng thông tin hướng dẫn
-    public GameObject[] objectsToDisable; // Danh sách các object cần disable
-    public GameObject ImageLivesUiBg; // Tạo một nền mờ
-    public GameObject ImageScoresUiBg; // Tạo một nền mờ
-    public GameObject ImageTimeUiBg; // Tạo một nền mờ
-    public GameObject InfoButton; // Tạo một nền mờ
+    public GameObject guidePanel;
+    public GameObject[] objectsToDisable;
+    public GameObject ImageLivesUiBg;
+    public GameObject ImageScoresUiBg;
+    public GameObject ImageTimeUiBg;
+    public GameObject InfoButton;
 
+    // Nút pause và hình ảnh của nó
+    public Button pauseButton;
+    public Sprite pauseSprite;    // Hình khi game đang chạy (hình pause)
+    public Sprite resumeSprite;   // Hình khi game bị tạm dừng (hình continue)
 
-
-    public enum GameManagerState
-    {
-        Opening,
-        GamePlay,
-        GameOver
-    }
-
+    public enum GameManagerState { Opening, GamePlay, GameOver }
     GameManagerState GMState;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private bool isPaused = false;
+
     void Start()
     {
         GMState = GameManagerState.Opening;
         objectsToDisable = new GameObject[] { playButton, quitButton, ImageLivesUiBg, ImageScoresUiBg, ImageTimeUiBg, InfoButton };
+
+        // Thêm listener cho nút pause
+        if (pauseButton != null)
+            pauseButton.onClick.AddListener(TogglePauseGame);
     }
 
-    // ham cap nhat vi tri quan li tro choi
+    void Update()
+    {
+        // Nếu game đang trong trạng thái GamePlay, nhấn ESC sẽ toggle pause
+        if (GMState == GameManagerState.GamePlay && Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePauseGame();
+        }
+    }
+    
     void UpdateGameManagerState()
     {
-        switch (GMState) 
+        switch (GMState)
         {
             case GameManagerState.Opening:
-
-                //An di game over
                 GameOverGO.SetActive(false);
-
-                // an di thien thach 
                 asteroidGeneratorGO.SetActive(false);
-
-                // hien thi title game
                 GameTitleGO.SetActive(true);
-
-                //Hien thi nut play (active)
                 playButton.SetActive(true);
                 InfoButton.SetActive(true);
-
-
-                //Hien thi nut quit (active)
                 quitButton.SetActive(true);
-
+                pauseButton.gameObject.SetActive(false); // Ẩn nút pause ở trạng thái Opening
                 break;
-            case GameManagerState.GamePlay:
-                //dat lai diem 
-                scoreUITextGO.GetComponent<GameScore>().Score = 0;
 
-                // an di nut play khi vao game
+            case GameManagerState.GamePlay:
+                scoreUITextGO.GetComponent<GameScore>().Score = 0;
                 playButton.SetActive(false);
                 InfoButton.SetActive(false);
-
-
-                //an di nut quit khi vao game
                 quitButton.SetActive(false);
-
-                //an di title game
                 GameTitleGO.SetActive(false);
-
-                // hien thi thien thach
                 asteroidGeneratorGO.SetActive(true);
-
-                // Cho phép spawn thiên thạch
                 asteroidGeneratorGO.GetComponent<AsteroidGenerator>().canSpawn = true;
                 asteroidGeneratorGO.GetComponent<AsteroidGenerator>().StartSpawning();
-
-                //hien thi nguoi choi va tao so mang
                 playerShip.GetComponent<PlayerController>().Init();
-
-                //bat dau tao enemy
                 enemySpawner.GetComponent<EnemySpawner>().ScheduleEnemySpawner();
-
-                //bat dau dem gio
                 TimeCounterGO.GetComponent<TimeCounter>().StartTimeCounter();
+                pauseButton.gameObject.SetActive(true); // Hiển thị nút pause trong lúc chơi
                 break;
 
             case GameManagerState.GameOver:
-
-                //dung dem gio
                 TimeCounterGO.GetComponent<TimeCounter>().StopTimeCounter();
-
-                //dung tao ra enemy
                 enemySpawner.GetComponent<EnemySpawner>().UnscheduleEnemySpawner();
-
-                //hien thi game over
                 GameOverGO.SetActive(true);
-
-                //hien nut quit khi game over
                 quitButton.SetActive(true);
-
-                //thay doi trang thai ve Opening sau 8 giay
+                pauseButton.gameObject.SetActive(false);
                 Invoke("ChangeToOpeningState", 8f);
-                
                 break;
         }
     }
 
-    // ham dat trang thai quan ly tro choi
     public void SetGameManagerState(GameManagerState state)
     {
         GMState = state;
         UpdateGameManagerState();
     }
 
-    //Nut Play duoc goi o day
-    // nguoi dung an nut 
+    // Phương thức gọi khi nhấn nút Play
     public void StartGamePlay()
     {
-        GMState = GameManagerState.GamePlay;
-        UpdateGameManagerState();
+        SetGameManagerState(GameManagerState.GamePlay);
         playerShip.GetComponent<PlayerController>().currentBullets = 1;
     }
 
-    // ham thay doi giao dien tro choi sang opening
+    // Chuyển về trạng thái Opening
     public void ChangeToOpeningState()
     {
         SetGameManagerState(GameManagerState.Opening);
+        ResumeGame(); // Đảm bảo khi chuyển về Opening, game được resume
     }
+
     public void ToggleGuidePanel()
     {
-        bool isActive = !guidePanel.activeSelf; // Kiểm tra trạng thái hiện tại
-
-        guidePanel.SetActive(isActive); // Bật/tắt panel
-
-        // Disable hoặc enable các object khác
+        bool isActive = !guidePanel.activeSelf;
+        guidePanel.SetActive(isActive);
         foreach (GameObject obj in objectsToDisable)
         {
             obj.SetActive(!isActive);
@@ -153,10 +121,52 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
+    #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-        #else
+    #else
             Application.Quit();
-        #endif
+    #endif
+    }
+
+    // Tự động gọi khi nhấn nút pause hoặc phím ESC
+    public void TogglePauseGame()
+    {
+        if (isPaused)
+            ResumeGame();
+        else
+            PauseGame();
+    }
+
+    private void PauseGame()
+    {
+        isPaused = true;
+        Time.timeScale = 0f;  // Tạm dừng game
+
+        // Vô hiệu hóa điều khiển của người chơi (ví dụ: không cho bắn, di chuyển)
+        if (playerShip != null)
+        {
+            // Nếu PlayerController chịu trách nhiệm nhận input, vô hiệu hóa component đó
+            playerShip.GetComponent<PlayerController>().enabled = false;
+        }
+
+        // Đổi hình nút pause sang hình resume (continue)
+        if (pauseButton != null && resumeSprite != null)
+            pauseButton.image.sprite = resumeSprite;
+    }
+
+    private void ResumeGame()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;  // Tiếp tục game
+
+        // Kích hoạt lại điều khiển của người chơi
+        if (playerShip != null)
+        {
+            playerShip.GetComponent<PlayerController>().enabled = true;
+        }
+
+        // Đổi hình nút pause về hình pause
+        if (pauseButton != null && pauseSprite != null)
+            pauseButton.image.sprite = pauseSprite;
     }
 }
