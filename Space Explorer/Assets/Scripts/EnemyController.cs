@@ -46,7 +46,7 @@ public class EnemyController : MonoBehaviour
             PlayExplosion();
 
             // them 100 diem cho moi enemy bi ha
-            scoreUITextGO.GetComponent<GameScore>().Score += 100;
+            scoreUITextGO.GetComponent<GameScore>().Score += 200;
 
             Destroy(gameObject);// huy tau
         }

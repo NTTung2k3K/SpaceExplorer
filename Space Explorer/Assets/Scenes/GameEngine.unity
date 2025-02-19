@@ -2235,7 +2235,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -2.8, y: 43.5}
+  m_AnchoredPosition: {x: -8.8, y: 29.8}
   m_SizeDelta: {x: 136.5002, y: 42.5247}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1868976661
@@ -2737,9 +2737,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AsteroidGO: {fileID: 7931937910412794005, guid: a8b5f9acc281e9744a015c4b2f2c13df, type: 3}
-  MaxAsteroids: 3
-  waveDelay: 3
-  canSpawn: 0
+  BigAsteroidGO: {fileID: 1503420110934412270, guid: bf0c593091cbce94da383c2a9db46cc1, type: 3}
+  MaxAsteroids: 1
+  canSpawn: 1
 --- !u!4 &1989553921
 Transform:
   m_ObjectHideFlags: 0

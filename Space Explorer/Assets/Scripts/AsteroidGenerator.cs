@@ -3,8 +3,10 @@ using System.Collections;
 
 public class AsteroidGenerator : MonoBehaviour
 {
-    public GameObject AsteroidGO; // Prefab thiên thạch
-    public int MaxAsteroids = 3;  // Số lượng thiên thạch trong mỗi đợt (wave)
+    public GameObject AsteroidGO;      // Prefab thiên thạch
+    public GameObject BigAsteroidGO;   // Prefab thiên thạch lớn
+    public int MaxAsteroids = 1;       // Số lượng mỗi loại cần spawn (sẽ được cập nhật theo thời gian)
+    public bool canSpawn = false;      // Cờ cho phép spawn
 
     // Mảng màu cho thiên thạch
     Color[] asteroidColors =
@@ -15,50 +17,71 @@ public class AsteroidGenerator : MonoBehaviour
         new Color(1f, 0f, 0f),     // red
     };
 
-    public float waveDelay = 1f;
     private bool isSpawningWave = false;
+    private float gameStartTime;
 
-    // Thêm biến canSpawn để kiểm soát việc spawn
-    public bool canSpawn = false;
+    // Khi generator được bật, reset thời gian bắt đầu
+    void OnEnable()
+    {
+        gameStartTime = Time.time;
+    }
 
-    // Bỏ hàm Start()
-
+    // Phương thức khởi tạo spawn, gọi từ GameManager khi vào GamePlay
     public void StartSpawning()
     {
+        gameStartTime = Time.time;
         StartCoroutine(SpawnWaveRoutine());
     }
 
     IEnumerator SpawnWaveRoutine()
     {
         isSpawningWave = true;
-        yield return new WaitForSeconds(waveDelay);
 
-        // Lấy vị trí màn hình
+        // Tính thời gian đã trôi qua kể từ khi bắt đầu game
+        float elapsedTime = Time.time - gameStartTime;
+
+        // Sau mỗi 40 giây, MaxAsteroids tăng thêm 1 đơn vị
+        MaxAsteroids = (int)(elapsedTime / 30f) + 1;
+
+        // Lấy biên của màn hình
         Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
 
+        // Spawn theo số lượng đã xác định
         for (int i = 0; i < MaxAsteroids; i++)
         {
-            Vector2 spawnPosition = new Vector2(Random.Range(min.x, max.x), max.y);
-            GameObject asteroid = Instantiate(AsteroidGO, spawnPosition, Quaternion.identity);
-
+            // Spawn Asteroid với vị trí random
+            Vector2 spawnPosAsteroid = new Vector2(Random.Range(min.x, max.x), max.y);
+            GameObject asteroid = Instantiate(AsteroidGO, spawnPosAsteroid, Quaternion.identity);
             asteroid.GetComponent<SpriteRenderer>().color = asteroidColors[Random.Range(0, asteroidColors.Length)];
             asteroid.GetComponent<Asteroid>().speed = -(1f * Random.value + 0.5f);
-
             asteroid.transform.parent = transform;
+
+            // Spawn BigAsteroid với vị trí random riêng biệt
+            Vector2 spawnPosBig = new Vector2(Random.Range(min.x, max.x), max.y);
+            GameObject bigAsteroid = Instantiate(BigAsteroidGO, spawnPosBig, Quaternion.identity);
+            bigAsteroid.GetComponent<SpriteRenderer>().color = asteroidColors[Random.Range(0, asteroidColors.Length)];
+            bigAsteroid.GetComponent<Asteroid>().speed = -(1f * Random.value + 0.5f);
+            bigAsteroid.transform.parent = transform;
         }
 
         isSpawningWave = false;
-    }
 
+        // Chờ cho đến khi tất cả thiên thạch đã bị tiêu diệt
+        while (transform.childCount > 0)
+        {
+            yield return null;
+        }
+
+        // Nếu vẫn cho phép spawn, tiến hành đợt spawn tiếp theo
+        if (canSpawn)
+        {
+            StartCoroutine(SpawnWaveRoutine());
+        }
+    }
     void Update()
     {
         if (!canSpawn)
             return;
-
-        if (transform.childCount == 0 && !isSpawningWave)
-        {
-            StartCoroutine(SpawnWaveRoutine());
-        }
     }
 }
