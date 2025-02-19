@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,6 +14,15 @@ public class GameManager : MonoBehaviour
     public GameObject TimeCounterGO; // khoi tao thoi gian
     public GameObject GameTitleGO; // khoi tao title
     public GameObject asteroidGeneratorGO;
+    public GameObject guidePanel; // Bảng thông tin hướng dẫn
+    public GameObject[] objectsToDisable; // Danh sách các object cần disable
+    public GameObject ImageLivesUiBg; // Tạo một nền mờ
+    public GameObject ImageScoresUiBg; // Tạo một nền mờ
+    public GameObject ImageTimeUiBg; // Tạo một nền mờ
+    public GameObject InfoButton; // Tạo một nền mờ
+
+
+
     public enum GameManagerState
     {
         Opening,
@@ -26,6 +36,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         GMState = GameManagerState.Opening;
+        objectsToDisable = new GameObject[] { playButton, quitButton, ImageLivesUiBg, ImageScoresUiBg, ImageTimeUiBg, InfoButton };
     }
 
     // ham cap nhat vi tri quan li tro choi
@@ -46,6 +57,8 @@ public class GameManager : MonoBehaviour
 
                 //Hien thi nut play (active)
                 playButton.SetActive(true);
+                InfoButton.SetActive(true);
+
 
                 //Hien thi nut quit (active)
                 quitButton.SetActive(true);
@@ -57,6 +70,8 @@ public class GameManager : MonoBehaviour
 
                 // an di nut play khi vao game
                 playButton.SetActive(false);
+                InfoButton.SetActive(false);
+
 
                 //an di nut quit khi vao game
                 quitButton.SetActive(false);
@@ -122,6 +137,18 @@ public class GameManager : MonoBehaviour
     public void ChangeToOpeningState()
     {
         SetGameManagerState(GameManagerState.Opening);
+    }
+    public void ToggleGuidePanel()
+    {
+        bool isActive = !guidePanel.activeSelf; // Kiểm tra trạng thái hiện tại
+
+        guidePanel.SetActive(isActive); // Bật/tắt panel
+
+        // Disable hoặc enable các object khác
+        foreach (GameObject obj in objectsToDisable)
+        {
+            obj.SetActive(!isActive);
+        }
     }
 
     public void QuitGame()
