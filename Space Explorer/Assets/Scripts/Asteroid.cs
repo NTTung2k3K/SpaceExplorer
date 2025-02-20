@@ -29,8 +29,8 @@ public class Asteroid : MonoBehaviour
         Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         if (transform.position.y < min.y)
         {
-            // Nếu thiên thạch trôi ra mà không bị bắn, trừ 500 điểm
-            if (scoreUITextGO != null)
+            // Chỉ trừ điểm nếu game chưa kết thúc
+            if (scoreUITextGO != null && !GameManager.IsGameOver)
             {
                 scoreUITextGO.GetComponent<GameScore>().Score -= 500;
             }
@@ -57,19 +57,19 @@ public class Asteroid : MonoBehaviour
                 hitCount++;
                 if (hitCount >= 2)
                 {
-                    if (scoreUITextGO != null)
+                    if (scoreUITextGO != null && !GameManager.IsGameOver)
                     {
                         scoreUITextGO.GetComponent<GameScore>().Score += 100;
                     }
                     PlayExplosion();
                     Destroy(gameObject);
                 }
-                // Lần đầu tiên bắn trúng: chỉ tăng hitCount và không phá hủy thiên thạch
+                // Lần đầu tiên bắn chỉ tăng hitCount mà không phá hủy
             }
             else
             {
-                // Với thiên thạch nhỏ, 1 lần bắn trúng đủ
-                if (scoreUITextGO != null)
+                // Với thiên thạch nhỏ, 1 lần bắn đủ
+                if (scoreUITextGO != null && !GameManager.IsGameOver)
                 {
                     scoreUITextGO.GetComponent<GameScore>().Score += 50;
                 }
@@ -79,7 +79,6 @@ public class Asteroid : MonoBehaviour
         }
         else if (col.tag == "PlayerShipTag")
         {
-            // Nếu va chạm với tàu người chơi
             PlayExplosion();
             Destroy(gameObject);
         }

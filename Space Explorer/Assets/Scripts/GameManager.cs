@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public GameObject ImageTimeUiBg;
     public GameObject InfoButton;
 
+
     // Nút pause và hình ảnh của nó
     public Button pauseButton;
     public Sprite pauseSprite;    // Hình khi game đang chạy (hình pause)
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     public enum GameManagerState { Opening, GamePlay, GameOver }
     GameManagerState GMState;
 
+    public static bool IsGameOver = false;
     private bool isPaused = false;
 
     void Start()
@@ -61,6 +63,7 @@ public class GameManager : MonoBehaviour
                 InfoButton.SetActive(true);
                 quitButton.SetActive(true);
                 pauseButton.gameObject.SetActive(false); // Ẩn nút pause ở trạng thái Opening
+                IsGameOver = false;
                 break;
 
             case GameManagerState.GamePlay:
@@ -76,9 +79,11 @@ public class GameManager : MonoBehaviour
                 enemySpawner.GetComponent<EnemySpawner>().ScheduleEnemySpawner();
                 TimeCounterGO.GetComponent<TimeCounter>().StartTimeCounter();
                 pauseButton.gameObject.SetActive(true); // Hiển thị nút pause trong lúc chơi
+                IsGameOver = false;
                 break;
 
             case GameManagerState.GameOver:
+                IsGameOver = true;
                 TimeCounterGO.GetComponent<TimeCounter>().StopTimeCounter();
                 enemySpawner.GetComponent<EnemySpawner>().UnscheduleEnemySpawner();
                 GameOverGO.SetActive(true);
